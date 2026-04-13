@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Химия Виртуалды Зертханалары</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Fira+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#fff5f8; --surface:#ffffff; --primary:#e5007d;
+    --secondary:#b5179e; --text:#1a1a2e; --muted:#6b7280; --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Fira Sans',sans-serif;background:var(--bg);color:var(--text);}
+
+  nav{background:white;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;box-shadow:0 2px 16px rgba(229,0,125,0.08);position:sticky;top:0;z-index:100;}
+  .logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.25rem;color:var(--primary);display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .nav-links{display:flex;gap:6px;}
+  .nav-link{background:none;border:none;padding:8px 16px;border-radius:24px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'Fira Sans',sans-serif;color:var(--muted);transition:all 0.2s;}
+  .nav-link:hover{background:#fff0f8;color:var(--primary);}
+  .nav-link.active{background:var(--primary);color:white;}
+
+  .page{display:none;}
+  .page.active{display:block;}
+
+  .hero{background:linear-gradient(135deg,#f72585 0%,#b5179e 50%,#7209b7 100%);padding:4rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
+  .hero::after{content:'⚗️';position:absolute;right:5%;top:50%;transform:translateY(-50%);font-size:9rem;opacity:0.1;}
+  .hero::before{content:'🧪';position:absolute;left:5%;top:50%;transform:translateY(-50%);font-size:8rem;opacity:0.1;}
+  .hero-badge{display:inline-block;background:rgba(255,255,255,0.2);color:white;border-radius:24px;padding:5px 16px;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;margin-bottom:1rem;border:1px solid rgba(255,255,255,0.3);}
+  .hero h1{font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(1.8rem,5vw,3rem);color:white;line-height:1.2;margin-bottom:0.8rem;}
+  .hero h1 span{color:#ffd60a;}
+  .hero p{color:rgba(255,255,255,0.8);font-size:1rem;max-width:520px;margin:0 auto 2rem;line-height:1.7;}
+  .hero-stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.7rem;color:white;}
+  .stat-label{color:rgba(255,255,255,0.65);font-size:0.78rem;margin-top:2px;}
+
+  .search-wrap{max-width:620px;margin:-26px auto 0;padding:0 1.5rem;position:relative;z-index:10;}
+  .search-box{display:flex;align-items:center;background:white;border-radius:50px;box-shadow:0 8px 40px rgba(229,0,125,0.15);padding:5px 5px 5px 18px;gap:8px;}
+  .search-box input{flex:1;border:none;outline:none;font-size:0.92rem;font-family:'Fira Sans',sans-serif;color:var(--text);background:transparent;padding:6px 0;}
+  .search-box input::placeholder{color:#bbb;}
+  .search-btn{background:var(--primary);color:white;border:none;border-radius:40px;padding:10px 22px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'Fira Sans',sans-serif;}
+
+  .main{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin:2rem 0 1.2rem;}
+  .section-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.35rem;color:var(--text);}
+  .count-badge{background:#fce4f1;color:var(--primary);border-radius:20px;padding:4px 14px;font-size:0.82rem;font-weight:700;}
+
+  .labs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+  .lab-card{background:white;border-radius:var(--radius);overflow:hidden;box-shadow:0 4px 24px rgba(229,0,125,0.08);border:1.5px solid rgba(229,0,125,0.08);transition:transform 0.2s,box-shadow 0.2s;}
+  .lab-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(229,0,125,0.16);}
+  .card-cover{height:130px;display:flex;align-items:center;justify-content:center;font-size:3.8rem;position:relative;}
+  .cover-chip{position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.9);border-radius:20px;padding:3px 11px;font-size:0.68rem;font-weight:800;letter-spacing:0.05em;color:var(--primary);}
+  .cover-level{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.22);color:white;border-radius:20px;padding:3px 10px;font-size:0.68rem;font-weight:600;}
+  .card-body{padding:1.1rem 1.3rem;}
+  .card-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:8px;line-height:1.3;}
+  .card-desc{font-size:0.84rem;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+  .card-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .info-item{background:#fff5f8;border-radius:10px;padding:8px 12px;border:1px solid rgba(229,0,125,0.1);}
+  .info-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;}
+  .info-val{font-size:0.88rem;font-weight:600;color:var(--text);}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .tag{font-size:0.72rem;font-weight:600;border-radius:20px;padding:3px 10px;}
+  .tag-pink{background:#fce4f1;color:var(--primary);}
+  .tag-teal{background:#e0faf4;color:#0a6b54;}
+  .tag-yellow{background:#fff8cc;color:#7a6200;}
+  .tag-purple{background:#f0e8ff;color:#5a0a9e;}
+  .steps-title{font-size:0.78rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;}
+  .steps-list{list-style:none;margin-bottom:16px;}
+  .steps-list li{display:flex;align-items:flex-start;gap:8px;font-size:0.82rem;color:var(--muted);line-height:1.5;padding:3px 0;}
+  .step-dot{min-width:18px;height:18px;border-radius:50%;background:var(--primary);color:white;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .divider{border:none;border-top:1.5px solid rgba(229,0,125,0.1);margin:12px 0;}
+  .card-btn{display:block;width:100%;background:var(--primary);color:white;border:none;border-radius:12px;padding:12px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;text-align:center;transition:background 0.18s,transform 0.15s;text-decoration:none;letter-spacing:0.02em;}
+  .card-btn:hover{background:var(--secondary);transform:scale(1.02);color:white;}
+
+  /* НҰСҚАУЛЫҚ */
+  .guide-hero{background:linear-gradient(135deg,#7209b7,#3a0ca3);padding:3rem 2rem;text-align:center;color:white;}
+  .guide-hero h1{font-family:'Nunito',sans-serif;font-weight:900;font-size:2rem;margin-bottom:0.5rem;}
+  .guide-hero p{color:rgba(255,255,255,0.75);font-size:0.95rem;}
+  .guide-content{max-width:800px;margin:0 auto;padding:2rem 1.5rem;}
+  .guide-card{background:white;border-radius:var(--radius);padding:1.5rem;margin-bottom:1.2rem;box-shadow:0 4px 20px rgba(0,0,0,0.06);border-left:4px solid var(--primary);}
+  .guide-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;font-weight:900;font-size:0.9rem;margin-bottom:10px;font-family:'Nunito',sans-serif;}
+  .guide-card h3{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:8px;color:var(--text);}
+  .guide-card p{font-size:0.88rem;color:var(--muted);line-height:1.7;}
+  .guide-card ul{padding-left:1.2rem;margin-top:8px;}
+  .guide-card ul li{font-size:0.88rem;color:var(--muted);line-height:1.8;}
+  .tip-box{background:#fff0f8;border-radius:12px;padding:1rem 1.2rem;border:1px solid rgba(229,0,125,0.2);margin-top:1rem;}
+  .tip-box p{font-size:0.85rem;color:var(--primary);font-weight:500;}
+
+  /* КІ РУ */
+  .login-wrap{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:2rem;}
+  .login-box{background:white;border-radius:20px;padding:2.5rem;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(229,0,125,0.12);border:1.5px solid rgba(229,0,125,0.1);}
+  .login-icon{text-align:center;font-size:3rem;margin-bottom:1rem;}
+  .login-box h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.5rem;text-align:center;margin-bottom:0.3rem;color:var(--text);}
+  .login-box p{font-size:0.85rem;color:var(--muted);text-align:center;margin-bottom:1.5rem;}
+  .form-group{margin-bottom:1rem;}
+  .form-label{font-size:0.82rem;font-weight:600;color:var(--text);display:block;margin-bottom:5px;}
+  .form-input{width:100%;padding:11px 14px;border:1.5px solid rgba(229,0,125,0.2);border-radius:10px;font-size:0.9rem;font-family:'Fira Sans',sans-serif;color:var(--text);outline:none;transition:border 0.2s;background:white;}
+  .form-input:focus{border-color:var(--primary);}
+  .login-btn{width:100%;background:var(--primary);color:white;border:none;border-radius:12px;padding:13px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:0.5rem;transition:background 0.2s;}
+  .login-btn:hover{background:var(--secondary);}
+  .login-alt{text-align:center;margin-top:1rem;font-size:0.82rem;color:var(--muted);}
+  .login-alt span{color:var(--primary);font-weight:600;cursor:pointer;}
+  .login-divider{border:none;border-top:1px solid rgba(229,0,125,0.1);margin:1.2rem 0;}
+  .login-msg{display:none;background:#e0faf4;border-radius:10px;padding:10px 14px;font-size:0.85rem;color:#0a6b54;margin-top:1rem;font-weight:500;text-align:center;}
+
+  footer{background:#1a1a2e;color:rgba(255,255,255,0.55);text-align:center;padding:2rem;font-size:0.83rem;margin-top:4rem;}
+  footer strong{color:white;}
+  @media(max-width:600px){.labs-grid{grid-template-columns:1fr;}.nav-link{padding:7px 10px;font-size:0.8rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showPage('catalog')">⚗️ ХимияЗерт</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('catalog')">Каталог</button>
+    <button class="nav-link" onclick="showPage('guide')">Нұсқаулық</button>
+    <button class="nav-link" onclick="showPage('login')">Кіру</button>
+  </div>
+</nav>
+
+<!-- КАТАЛОГ -->
+<div class="page active" id="page-catalog">
+  <div class="hero">
+    <div class="hero-badge">⚗️ ХИМИЯ · ВИРТУАЛДЫ ЗЕРТХАНА</div>
+    <h1>Химияны <span>тәжірибемен</span> үйрен</h1>
+    <p>Қауіпсіз цифрлық ортада нақты зертханалық тәжірибелер. Реакцияларды өзің жасап, нәтижені бақыла.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Зертхана</div></div>
+      <div class="stat"><div class="stat-num">7–11</div><div class="stat-label">Сынып</div></div>
+      <div class="stat"><div class="stat-num">Тегін</div><div class="stat-label">Қолданыс</div></div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Зертхана іздеу... мыс: қышқыл, электролиз..." oninput="filterLabs()">
+      <button class="search-btn" onclick="filterLabs()">Іздеу</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="section-head">
+      <div class="section-title">Барлық химия зертханалары</div>
+      <span class="count-badge" id="countBadge">8 зертхана</span>
+    </div>
+    <div class="labs-grid" id="labsGrid"></div>
+  </div>
+</div>
+
+<!-- НҰСҚАУЛЫҚ -->
+<div class="page" id="page-guide">
+  <div class="guide-hero">
+    <h1>📖 Қолдану нұсқаулығы</h1>
+    <p>Виртуалды зертхананы қалай пайдалану керек — қадамдық нұсқаулық</p>
+  </div>
+  <div class="guide-content">
+    <div class="guide-card">
+      <div class="guide-num">1</div>
+      <h3>Зертхананы таңдаңыз</h3>
+      <p>Каталог бетінен өзіңізге қажет зертхананы тауып алыңыз. Атауын, сынып деңгейін және уақытын назарға алыңыз.</p>
+      <ul>
+        <li>Іздеу жолағына тақырып атын жазыңыз</li>
+        <li>Сынып деңгейіне назар аударыңыз</li>
+        <li>Тіл бағанын тексеріңіз (қазақша / орысша / ағылшынша)</li>
+      </ul>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">2</div>
+      <h3>Гипотеза жасаңыз</h3>
+      <p>Зертхананы бастамас бұрын, эксперимент нәтижесін болжаңыз. Мысалы: «Температура жоғарыласа, реакция жылдамдайды деп ойлаймын».</p>
+      <div class="tip-box"><p>💡 Кеңес: Гипотезаңызды дәптерге жазып алыңыз — кейін нәтижемен салыстырасыз!</p></div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">3</div>
+      <h3>«Зертхананы бастау» батырмасын басыңыз</h3>
+      <p>Батырманы бассаңыз, зертхана платформасының сайты жаңа терезеде ашылады. Платформалар:</p>
+      <ul>
+        <li><strong>PhET</strong> — phet.colorado.edu — тегін, тіркелусіз жұмыс істейді</li>
+        <li><strong>MolView</strong> — molview.org — 3D молекула моделі, тегін</li>
+      </ul>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">4</div>
+      <h3>Зерттеу қадамдарын орындаңыз</h3>
+      <p>Әр зертхана картасындағы «Зерттеу қадамдары» бөлімін қадамдап орындаңыз. Деректерді өлшеп, дәптерге жазыңыз.</p>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">5</div>
+      <h3>Қорытынды жасаңыз</h3>
+      <p>Эксперимент аяқталған соң нәтижені гипотезаңызбен салыстырыңыз.</p>
+      <ul>
+        <li>Неліктен солай болды деп түсіндіріңіз</li>
+        <li>Есептерді орындаңыз</li>
+        <li>Мұғалімге есеп тапсырыңыз</li>
+      </ul>
+      <div class="tip-box"><p>💡 Есеп жазу кезегі: мақсат → гипотеза → жабдықтар → барысы → нәтиже → қорытынды.</p></div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">6</div>
+      <h3>Қауіпсіздік ережелері</h3>
+      <p>Виртуалды зертхана қауіпсіз, бірақ нақты зертханада:</p>
+      <ul>
+        <li>Халат пен қорғаныш көзілдірік киіңіз</li>
+        <li>Химикаттарды иіскемеңіз</li>
+        <li>Мұғалімнің рұқсатынсыз тәжірибе жасамаңыз</li>
+        <li>Авария болса — дереу мұғалімге хабарлаңыз</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- КІ РУ -->
+<div class="page" id="page-login">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-icon">🔐</div>
+      <h2>Жүйеге кіру</h2>
+      <p>Прогресіңізді сақтау үшін кіріңіз</p>
+      <div class="form-group">
+        <label class="form-label">Электрондық пошта</label>
+        <input type="email" class="form-input" id="emailInput" placeholder="example@mail.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Құпиясөз</label>
+        <input type="password" class="form-input" id="passInput" placeholder="••••••••">
+      </div>
+      <button class="login-btn" onclick="handleLogin()">Кіру →</button>
+      <div class="login-msg" id="loginMsg">✅ Сәтті кірдіңіз! Каталогқа өтуде...</div>
+      <hr class="login-divider">
+      <div class="login-alt">Аккаунт жоқ па? <span onclick="alert('Тіркелу мүмкіндігі жақында қосылады!')">Тіркелу</span></div>
+      <div class="login-alt" style="margin-top:8px"><span onclick="showPage('catalog')">← Каталогқа оралу</span></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 <strong>ХимияЗерт</strong> — Дипломдық жұмыс жобасы</p>
+  <p style="margin-top:6px">Барлық зертханалар тегін · Қазақстан мектептеріне арналған</p>
+</footer>
+
+<script>
+const labs=[
+  {icon:'🧪',bg:'linear-gradient(135deg,#f72585,#b5179e)',title:'Қышқыл-негіз реакциялары',desc:'pH индикаторы арқылы ерітінділердің қышқылдығын анықтаңыз. Нейтрализация реакцияларын виртуалды зертханада қауіпсіз зерттеп, нәтижені бақылаңыз.',level:'9–10 сынып',duration:'50 мин',platform:'PhET',lang:'Қазақша',url:'https://phet.colorado.edu/kk/simulations/acid-base-solutions',tags:['Қышқыл-негіз','pH','Нейтрализация'],tagColors:['tag-pink','tag-teal','tag-yellow'],steps:['Гипотеза: ерітіндінің pH мәнін болжаңыз','Индикатор қосып, түс өзгерісін бақылаңыз','Нейтрализация реакциясын жүргізіңіз','Деректерді жазып, қорытынды жасаңыз'],keywords:'қышқыл негіз ph нейтрализация'},
+  {icon:'🔥',bg:'linear-gradient(135deg,#fb8500,#e07000)',title:'Тотығу-тотықсыздану реакциялары',desc:'Электрондардың берілу процесін бақылаңыз. Тотықтырғыш пен тотықсыздандырғышты анықтап, реакция теңдеуін тепе-теңдестіруді үйреніңіз.',level:'10–11 сынып',duration:'55 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/reactants-products-and-leftovers',tags:['Тотығу','Электрон','Редокс'],tagColors:['tag-yellow','tag-purple','tag-pink'],steps:['Заттардың тотығу дәрежелерін анықтаңыз','Электрон берілуін схемада белгілеңіз','Реакция теңдеуін тепе-теңдестіріңіз','Нәтижені тексеріп, қорытынды жазыңыз'],keywords:'тотығу тотықсыздану редокс электрон'},
+  {icon:'⚗️',bg:'linear-gradient(135deg,#06d6a0,#049a72)',title:'Органикалық қосылыстар — 3D модель',desc:'Алкандар, алкендер, алкиндердің молекулалық моделін жасаңыз. Изомерлерді анықтап, 3D кеңістікте байланыстарды зерттеңіз.',level:'9–10 сынып',duration:'45 мин',platform:'MolView',lang:'Ағылшынша',url:'https://molview.org/',tags:['Органика','Молекула','Изомер'],tagColors:['tag-teal','tag-yellow','tag-purple'],steps:['Молекула формуласын енгізіп, 3D моделін қараңыз','Функционалдық топтарды белгілеңіз','Изомерлерді сызып салыстырыңыз','Қасиеттерін кестеге толтырыңыз'],keywords:'органикалық алкан алкен молекула изомер'},
+  {icon:'🌡️',bg:'linear-gradient(135deg,#e5007d,#9e0057)',title:'Химиялық тепе-теңдік',desc:'Ле-Шателье принципін тәжірибелік тұрде зерттеңіз. Температура, қысым және концентрация өзгерісінің тепе-теңдікке ықпалын бақылаңыз.',level:'10–11 сынып',duration:'50 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/reactions-and-rates',tags:['Тепе-теңдік','Ле-Шателье','Концентрация'],tagColors:['tag-pink','tag-yellow','tag-teal'],steps:['Тепе-теңдік жағдайын орнатыңыз','Температураны өзгертіп, ығысуды бақылаңыз','Концентрация мен қысым эффектісін зерттеңіз','Ле-Шателье принципімен дәлелдеңіз'],keywords:'тепе теңдік ле шателье концентрация қысым температура'},
+  {icon:'⚡',bg:'linear-gradient(135deg,#4361ee,#3a0ca3)',title:'Электрохимия — гальваникалық элемент',desc:'Гальваникалық элементтің жұмыс принципін зерттеңіз. Электродтық потенциал мен ЭҚК-ны өлшеп, тотығу-тотықсыздану реакцияларымен байланыстырыңыз.',level:'10–11 сынып',duration:'55 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/battery-voltage',tags:['Электрохимия','Гальваникалық','ЭҚК'],tagColors:['tag-purple','tag-teal','tag-pink'],steps:['Металл электродтарды таңдаңыз','Электролит ерітіндісін қосыңыз','Кернеуді вольтметрмен өлшеңіз','Нернст теңдеуімен есептеңіз'],keywords:'электрохимия гальваникалық элемент кернеу потенциал'},
+  {icon:'🔬',bg:'linear-gradient(135deg,#7209b7,#560bad)',title:'Кристалл тор құрылымы',desc:'Иондық, атомдық, молекулалық және металдық кристалл торлардың 3D моделін зерттеңіз. Химиялық байланыс түрлерін талдаңыз.',level:'8–9 сынып',duration:'40 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/states-of-matter',tags:['Кристалл','Иондық тор','Байланыс'],tagColors:['tag-purple','tag-pink','tag-teal'],steps:['Заттың агрегаттық күйін таңдаңыз','Молекула аралық күштерді бақылаңыз','Температура ықпалын зерттеңіз','Кристалл тор түрімен байланыстырыңыз'],keywords:'кристалл тор иондық атомдық молекулалық байланыс'},
+  {icon:'💧',bg:'linear-gradient(135deg,#4cc9f0,#4895ef)',title:'Ерітінділер және концентрация',desc:'Ерітіндінің концентрациясын есептеңіз. Молярлық концентрация, массалық үлес және ерігіштік қисықтарын зерттеңіз.',level:'9–10 сынып',duration:'40 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/concentration',tags:['Ерітінді','Концентрация','Молярлық'],tagColors:['tag-teal','tag-yellow','tag-pink'],steps:['Еріткіш пен еріндіні таңдаңыз','Концентрацияны өзгертіп, түсті бақылаңыз','Молярлық концентрацияны есептеңіз','Сұйылту заңын тексеріңіз'],keywords:'ерітінді концентрация молярлық массалық'},
+  {icon:'🧫',bg:'linear-gradient(135deg,#f77f00,#d62828)',title:'Тұздардың гидролизі',desc:'Тұздардың сулы ерітіндідегі иондарының су молекулаларымен әрекеттесуін зерттеңіз. Ортаны анықтап, гидролиз теңдеуін жазыңыз.',level:'9–10 сынып',duration:'45 мин',platform:'PhET',lang:'Орысша',url:'https://phet.colorado.edu/ru/simulations/sugar-and-salt-solutions',tags:['Гидролиз','Тұздар','Иондар'],tagColors:['tag-yellow','tag-pink','tag-teal'],steps:['Тұздың иондық құрамын жазыңыз','pH арқылы ерітінді ортасын анықтаңыз','Гидролиз теңдеуін жазыңыз','Күшті/әлсіз қышқыл-негіз ережесін қолданыңыз'],keywords:'гидролиз тұз ион орта ph'}
+];
+
+function renderLabs(data){
+  const grid=document.getElementById('labsGrid');
+  document.getElementById('countBadge').textContent=data.length+' зертхана';
+  if(!data.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:4rem;color:#bbb;font-size:1.1rem;">Зертхана табылмады 😔</div>';return;}
+  grid.innerHTML=data.map(lab=>`
+    <div class="lab-card">
+      <div class="card-cover" style="background:${lab.bg}">
+        <span>${lab.icon}</span>
+        <span class="cover-chip">⚗️ ХИМИЯ</span>
+        <span class="cover-level">${lab.level}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${lab.title}</div>
+        <div class="card-desc">${lab.desc}</div>
+        <div class="card-info">
+          <div class="info-item"><div class="info-label">⏱ Уақыт</div><div class="info-val">${lab.duration}</div></div>
+          <div class="info-item"><div class="info-label">💻 Платформа</div><div class="info-val">${lab.platform}</div></div>
+          <div class="info-item"><div class="info-label">📚 Сынып</div><div class="info-val">${lab.level}</div></div>
+          <div class="info-item"><div class="info-label">🌐 Тіл</div><div class="info-val">${lab.lang}</div></div>
+        </div>
+        <div class="card-tags">${lab.tags.map((t,i)=>`<span class="tag ${lab.tagColors[i]}">${t}</span>`).join('')}</div>
+        <hr class="divider">
+        <div class="steps-title">📋 Зерттеу қадамдары</div>
+        <ul class="steps-list">${lab.steps.map((s,i)=>`<li><span class="step-dot">${i+1}</span><span>${s}</span></li>`).join('')}</ul>
+        <a href="${lab.url}" target="_blank" rel="noopener noreferrer" class="card-btn">🚀 Зертхананы бастау →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterLabs(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  renderLabs(q?labs.filter(l=>l.title.toLowerCase().includes(q)||l.keywords.includes(q)):labs);
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const idx={catalog:0,guide:1,login:2}[name];
+  document.querySelectorAll('.nav-link')[idx].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function handleLogin(){
+  const email=document.getElementById('emailInput').value;
+  const pass=document.getElementById('passInput').value;
+  if(!email||!pass){alert('Электрондық пошта мен құпиясөзді толтырыңыз!');return;}
+  const msg=document.getElementById('loginMsg');
+  msg.style.display='block';
+  setTimeout(()=>showPage('catalog'),1800);
+}
+
+renderLabs(labs);
+</script>
+</body>
+</html>
